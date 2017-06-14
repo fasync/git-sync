@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [[ -z $GIT_REP_PATH ]]
+then
+	echo "[-] You should set GIT_REP_PATH"
+	exit
+fi
+
+for folder in $(find $GIT_REP_PATH -maxdepth 1 -mindepth 1 -type d)
+do
+	cd $folder
+	
+	git status > /dev/null 2>&1
+	if [[ $? == 128 ]]; then
+		continue
+	fi
+	
+	printf "[+] %s: " "$folder"
+	prev=$(git rev-list HEAD -n 1)
+	git pull
+	test $prev = $(git rev-list HEAD -n 1) || git log
+	
+	cd - > /dev/null 2>&1
+done
