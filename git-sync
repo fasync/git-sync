@@ -6,7 +6,10 @@ then
 	exit
 fi
 
-for folder in $(find $GIT_REP_PATH -maxdepth 1 -mindepth 1 -type d)
+IFS=':' read -r -a ARR <<< "$GIT_REP_PATH"
+unset IFS
+
+for folder in $(find ${ARR[@]} -maxdepth 1 -mindepth 1 -type d)
 do
 	cd $folder
 	
