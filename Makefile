@@ -1,7 +1,7 @@
 all:
 	@echo "Use install or uninstall"
 
-.PHONY:
+.PHONY: install uninstall
 
 install:
 	cp ./git-sync /usr/bin/git-sync
