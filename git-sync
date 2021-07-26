@@ -2,7 +2,7 @@
 
 if [[ -z $GIT_REP_PATH ]]
 then
-	echo "[-] You should set GIT_REP_PATH"
+	echo "[E] You should set GIT_REP_PATH"
 	exit
 fi
 

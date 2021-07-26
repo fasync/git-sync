@@ -1,0 +1,42 @@
+#!/bin/sh
+
+if [ -z $GIT_REP_PATH ]
+then
+    echo "[E] You should set GIT_REP_PATH"
+    exit
+fi
+
+IFS=':';
+
+for path in $GIT_REP_PATH;
+do
+    for folder in "$path"/*
+    do
+	cd $folder
+
+	git status > /dev/null 2>&1
+	if [ $? == 128 ]; then
+		continue
+	fi
+
+	if ! git diff-index --quiet --cached HEAD;
+	then
+	    echo -e "[\033[0;31mUP\033[0m] $folder has \033[0;31munpushed\033[0m changes."
+	    continue
+	elif ! git diff-files --quiet;
+	then
+	    echo -e "[\033[0;31mUS\033[0m] $folder has \033[0;31munstaged\033[0m changes."
+	    continue
+	elif [ -n "`git ls-files --others --exclude-standard`" ];
+	then
+	    echo -e "[\033[0;31mUT\033[0m] $folder has \033[0;31muntracked, unignored\033[0m files."
+	    continue
+	else
+	    echo -e "[\033[0;32mOK\033[0m] $folder is fine."
+	fi
+
+	cd - > /dev/null 2>&1
+    done
+done
+
+unset IFS
